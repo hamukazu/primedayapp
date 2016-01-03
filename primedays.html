@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>Prime Number Days</title>
+<script>
+var primes=[]
+
+function setUp() {
+  var f=[]
+  for (var i=0; 2*i+3<10000; ++i)
+    f.push(true);
+  primes.push(2)
+  for (var i=0; 2*i+3<10000; ++i) {
+    if (f[i]) {
+      var p=2*i+3;
+      primes.push(p);
+      for (var j=i+p; 2*j+3<10000; j+=p)
+        f[j]=false;
+    }
+  }
+}
+
+function isPrime(n) {
+  for (var i=0; i<primes.length; ++i) {
+    if (n%primes[i]==0)
+      return false;
+  }
+  return true
+}
+
+function primeDays(year) {
+  var ret=[]
+  var y=year;
+  var baseDay=(new Date(year,0,1)).getTime()
+  for (var i=0; ; ++i) {
+    var day=new Date(baseDay+24*60*60*1000*i);
+    if (day.getFullYear()!=year)
+      break;
+    var dayInt=+(""+year+("0"+(1+day.getMonth())).slice(-2)
+      +("0"+day.getDate()).slice(-2));
+    if (isPrime(dayInt)) {
+      ret.push(""+dayInt)
+    }
+  }
+  return ret;
+}
+                                 
+function show() {
+  var yr=document.getElementById("yr");
+  var year=+yr.value;
+  if (year<1 || year>9999) {
+    alert("Error: illegal input");
+  }
+  setUp()
+  console.log(year);
+  var result=document.getElementById("result");
+  while (result.firstChild) result.removeChild(result.firstChild);
+  var pds=primeDays(year);
+  var tbl=document.createElement("table");
+  for (var i=0; i<pds.length; ++i) {
+    var tr=document.createElement("tr");
+    var td=document.createElement("td");
+    td.innerHTML=pds[i];
+    tr.appendChild(td);
+    tbl.appendChild(tr);
+  }
+  t=document.createElement("p");
+  t.innerHTML="Prime days of the year "+year+":"
+  result.appendChild(t);
+  result.appendChild(tbl);
+  return false;
+}
+</script>
+</head>
+<body>
+<h1>Prime Number Days</h1>
+This app calculates prime number days for a given year. A prime number day means a day which becomes a prime number when expressed as yyyymmdd.
+<p>
+Enter a year (1-9999)
+<form id="form1" onSubmit="return show();">
+<input type="text" id="yr"/>
+<input type="submit" />
+</form>
+</p>
+<div id="result">
+</div>
+</body>
+</html>
