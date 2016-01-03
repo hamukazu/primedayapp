@@ -49,6 +49,7 @@ function show() {
   var year=+yr.value;
   if (year<1 || year>9999) {
     alert("Error: illegal input");
+    return false;
   }
   setUp()
   console.log(year);
